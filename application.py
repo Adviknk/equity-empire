@@ -1,20 +1,43 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from helper import *
 
 app = Flask(__name__)
-
-signedIn = False
+app.secret_key = 'your_secret_key'
 
 
 @app.route("/")
-def home():
-    return render_template('home.html')
+@app.route("/home")
+@app.route("/home/<username>")
+def home(username=''):
+    if 'username' in session:
+        return render_template('home.html', username=session['username'])
+    else:
+        return render_template('home.html', username='')
+
+
+@app.route("/explore")
+@app.route("/explore/<username>")
+def explore(username=''):
+    if 'username' in session:
+        return render_template('explore.html', username=session['username'])
+    else:
+        return render_template('explore.html', username='')
+
+
+@app.route("/leagues")
+@app.route("/leagues/<username>")
+def leagues(username=''):
+    if 'username' in session:
+        return render_template('league-home.html', username=session['username'])
+    else:
+        return redirect('/login')
 
 
 @app.route("/account")
-def account():
-    if signedIn:
-        return render_template('account.html')
+@app.route("/account/<username>")
+def account(username=''):
+    if 'username' in session:
+        return render_template('account.html', username=session['username'])
     else:
         return redirect('/login')
 
@@ -25,17 +48,15 @@ def log_in():
         return render_template("log-in.html")
 
     if request.method == "POST":
+        user_name = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        print(email)
-        if email == '':
-            return render_template("login-error.html", error='email is invalid')
-        if password == '':
-            return render_template("login-error.html", error='password is invalid')
 
-        signedIn = True
+        if user_name == '':
+            return render_template("login-error.html", error='username is invalid')
 
-        return render_template("account.html")
+        session['username'] = user_name
+        return redirect('/account/' + user_name)
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -46,26 +67,22 @@ def sign_up():
     if request.method == "POST":
         first = request.form.get('first')
         last = request.form.get('last')
+        user_name = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if first == '':
-            return render_template("signup-error.html", error='first name is invalid')
-        if last == '':
-            return render_template("signup-error.html", error='last name is invalid')
-        if email == '':
-            return render_template("signup-error.html", error='email is invalid')
-        if password == '':
-            return render_template("signup-error.html", error='password is invalid')
+        if user_name == '':
+            return render_template("signup-error.html", error='username is invalid')
 
-        signedIn = True
-        return render_template("account.html")
+        session['username'] = user_name
+
+        return redirect('/account' + user_name)
 
 
-@app.route("/league/<name>")
-def league(name=''):
-    if (name == ''):
-        return render_template('home.html')
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect('/')
 
 
 if __name__ == "__main__":

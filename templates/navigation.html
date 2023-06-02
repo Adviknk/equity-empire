@@ -12,14 +12,49 @@
     </head>
 
     <body>
-
+        <div id="username" data-parameter={{username}}></div>
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Equity Empire</a>
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="#">Explore</a>
-                <a class="nav-link" href="#">Leagues</a>
-                <a class="nav-link" href="/account">Account</a>
+                <a id='logoBtn' class="navbar-brand" href="/">Equity Empire</a>
+                <script>
+                    let logoBtn = document.querySelector('#logoBtn');
+
+                    if('{{username}}' != '') {
+                        logoBtn.href = "/home/" + "{{username}}";
+                    }
+                </script>
+                <a id='homeBtn' class="nav-link" href="/home">Home</a>
+                <script>
+                    let homeBtn = document.querySelector('#homeBtn');
+
+                    if('{{username}}' != '') {
+                        homeBtn.href = "/home/" + "{{username}}";
+                    }
+                </script>
+                <a id='exploreBtn' class="nav-link" href="/explore">Explore</a>
+                <script>
+                    let exploreBtn = document.querySelector('#exploreBtn');
+
+                    if('{{username}}' != '') {
+                        exploreBtn.href = "/explore/" + "{{username}}";
+                    }
+                </script>
+                <a id='leaguesBtn' class="nav-link" href="/leagues">Leagues</a>
+                <script>
+                    let leaguesBtn = document.querySelector('#leaguesBtn');
+
+                    if('{{username}}' != '') {
+                        leaguesBtn.href = "/leagues/" + "{{username}}";
+                    }
+                </script>
+                <a id='accountBtn' class="nav-link" href="/account">Account</a>
+                <script>
+                    let accountBtn = document.querySelector('#accountBtn');
+
+                    if('{{username}}' != '') {
+                        accountBtn.href = "/account/" + "{{username}}";
+                    }
+                </script>
             </div>
         </nav>
         
