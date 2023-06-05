@@ -11,6 +11,7 @@ user_leagues = []
 @app.route("/home")
 @app.route("/home/<username>")
 def home(username=''):
+    load_users()
     if 'username' in session:
         return render_template('home.html', username=session['username'])
     else:
@@ -58,8 +59,8 @@ def log_in():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if user_name == '':
-            return render_template("login-error.html", error='username is invalid')
+        if not authenticate(username=user_name, email=email, password=password):
+            return render_template("login-error.html", error='invalid input')
 
         session['username'] = user_name
         return redirect('/account/' + user_name)

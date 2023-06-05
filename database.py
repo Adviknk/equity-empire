@@ -1,6 +1,10 @@
 from sqlalchemy import create_engine
+import os
 
-db_string = "mysql+pymysql://iqfzg8lbhpiy4qc7wtzu:pscale_pw_6IY8Vgm2eYoNVZROiqGPDu2iKr2pyG4Be0elSxL7v75@aws.connect.psdb.cloud/stock-trading-game?charset=utf8mb4"
+
+db_password = os.getenv("DATABASE_PASSWORD")
+db_string = "mysql+pymysql://9qnyibjw2viylcgcxr43:" + db_password + \
+    "@aws.connect.psdb.cloud/stock-trading-game?charset=utf8mb4"
 
 
 engine = create_engine(
