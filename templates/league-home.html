@@ -19,7 +19,7 @@
         for(let i = 0; i < loop_leagues.length; i++) {
             var anchor = document.createElement('a');
             anchor.setAttribute('class', 'btn btn-secondary btn-lg btn-block mt-2');
-            anchor.setAttribute('href', '/leagues/{{username}}/' + loop_leagues[i]);
+            anchor.setAttribute('href', '/leagues/{{username}}/' + loop_leagues[i] + '/portfolio');
             anchor.innerText = loop_leagues[i];
             let contain = document.querySelector("#leagues_page")
             contain.appendChild(anchor);

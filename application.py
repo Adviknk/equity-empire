@@ -138,13 +138,57 @@ def join(username=''):
         return redirect('/login')
 
 
-@app.route("/leagues/<username>/<league_name>")
-def league_info(username='', league_name=''):
+@app.route("/leagues/<username>/<league_name>/portfolio")
+def portfolio(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
         # check if league in username database
         if league_name in user_leagues:
-            return render_template('league-first.html', username=session['username'], name=league_name)
+            return render_template('portfolio.html', username=session['username'], name=league_name)
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/stocks")
+def stocks(username='', league_name=''):
+    # also check if the username in session has a league with that name by checking database
+    if 'username' in session:
+        # check if league in username database
+        if league_name in user_leagues:
+            return render_template('stocks.html', username=session['username'], name=league_name)
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/scoreboard")
+def scoreboard(username='', league_name=''):
+    # also check if the username in session has a league with that name by checking database
+    if 'username' in session:
+        # check if league in username database
+        if league_name in user_leagues:
+            return render_template('scoreboard.html', username=session['username'], name=league_name)
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/standings")
+def standings(username='', league_name=''):
+    # also check if the username in session has a league with that name by checking database
+    if 'username' in session:
+        # check if league in username database
+        if league_name in user_leagues:
+            return render_template('standings.html', username=session['username'], name=league_name)
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/schedule")
+def schedule(username='', league_name=''):
+    # also check if the username in session has a league with that name by checking database
+    if 'username' in session:
+        # check if league in username database
+        if league_name in user_leagues:
+            return render_template('schedule.html', username=session['username'], name=league_name)
 
     return redirect('/login')
 

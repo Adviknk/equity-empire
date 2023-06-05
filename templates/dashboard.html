@@ -9,17 +9,20 @@
 {% block body %}
 <nav class="navbar bg-body-tertiary">
     <div class="container">
-        <a class="nav-link" href="/leagues/{{username}}/{{name}}">
-            Home
+        <a class="nav-link" href="/leagues/{{username}}/{{name}}/portfolio">
+            My Portfolio
         </a>
-        <a class="nav-link" href="#">
-            Name: {{username}}
+        <a class="nav-link" href="/leagues/{{username}}/{{name}}/stocks">
+            Stocks
         </a>
-        <a class="nav-link" href="#">
-            League: {{name}}
+        <a class="nav-link" href="/leagues/{{username}}/{{name}}/scoreboard">
+            Scoreboard
         </a>
-        <a class="nav-link" href="#">
-            Fourth
+        <a class="nav-link" href="/leagues/{{username}}/{{name}}/standings">
+            Standings
+        </a>
+        <a class="nav-link" href="/leagues/{{username}}/{{name}}/schedule">
+            Schedule
         </a>
     </div>
 </nav>
