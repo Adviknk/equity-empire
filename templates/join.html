@@ -1,0 +1,29 @@
+{% extends "navigation.html" %}
+
+
+{% block title %}
+    Join
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <h1>Join League</h1>
+    <h1>Username: {{username}}</h1>
+</div>
+<main class="container">
+    <h1 class="my-4">Join League</h1>
+    <form action="/join/{{username}}" method="POST">
+        <div class="mb-3">
+          <label class="form-label">League ID</label>
+          <input name='id' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">League Password</label>
+            <input name='pwd' class="form-control">
+        </div>
+        <a href="/leagues/{{username}}"  class="btn btn-primary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</main>
+{% endblock %}

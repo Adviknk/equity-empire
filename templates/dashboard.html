@@ -1,0 +1,27 @@
+{% extends "navigation.html" %}
+
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+
+{% block body %}
+<nav class="navbar bg-body-tertiary">
+    <div class="container">
+        <a class="nav-link" href="/leagues/{{username}}/{{name}}">
+            Home
+        </a>
+        <a class="nav-link" href="#">
+            Name: {{username}}
+        </a>
+        <a class="nav-link" href="#">
+            League: {{name}}
+        </a>
+        <a class="nav-link" href="#">
+            Fourth
+        </a>
+    </div>
+</nav>
+{% block main %}{% endblock %}
+{% endblock %}

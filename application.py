@@ -4,6 +4,8 @@ from helper import *
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
+user_leagues = []
+
 
 @app.route("/")
 @app.route("/home")
@@ -28,7 +30,8 @@ def explore(username=''):
 @app.route("/leagues/<username>")
 def leagues(username=''):
     if 'username' in session:
-        return render_template('league-home.html', username=session['username'])
+        # currently using leagues array but will use SQL array connected to the username
+        return render_template('league-home.html', username=session['username'], all_leagues=user_leagues)
     else:
         return redirect('/login')
 
@@ -44,6 +47,9 @@ def account(username=''):
 
 @app.route("/login", methods=["GET", "POST"])
 def log_in():
+    if 'username' in session:
+        return redirect('/account')
+
     if request.method == "GET":
         return render_template("log-in.html")
 
@@ -61,6 +67,9 @@ def log_in():
 
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
+    if 'username' in session:
+        return redirect('/account')
+
     if request.method == "GET":
         return render_template("sign-up.html")
 
@@ -83,6 +92,61 @@ def sign_up():
 def logout():
     session.clear()
     return redirect('/')
+
+
+@app.route("/create/<username>", methods=["GET", "POST"])
+def create(username=''):
+    if 'username' in session:
+
+        if request.method == "GET":
+            return render_template('create.html', username=session['username'])
+
+        if request.method == "POST":
+            name = request.form.get('name')
+            if name == '':
+                return redirect('/leagues')
+
+            # adding the league to the leagues
+            # replace with SQL data
+            user_leagues.append(name)
+
+            return redirect('/leagues')
+
+    else:
+        return redirect('/login')
+
+
+@app.route("/join/<username>", methods=["GET", "POST"])
+def join(username=''):
+    if 'username' in session:
+        if request.method == "GET":
+            return render_template('join.html', username=session['username'])
+
+        if request.method == "POST":
+            id = request.form.get('id')
+            pwd = request.form.get('pwd')
+            if id == '':
+                return redirect('/leagues')
+
+            # check if the id and pwd are correct and add that league to the
+            # users leagues in SQL
+            # each league will have an id and all information
+
+            return redirect('/leagues')
+
+    else:
+        return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>")
+def league_info(username='', league_name=''):
+    # also check if the username in session has a league with that name by checking database
+    if 'username' in session:
+        # check if league in username database
+        if league_name in user_leagues:
+            return render_template('league-first.html', username=session['username'], name=league_name)
+
+    return redirect('/login')
 
 
 if __name__ == "__main__":
