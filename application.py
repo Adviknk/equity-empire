@@ -136,9 +136,14 @@ def join(username=''):
 
         if request.method == "POST":
             id = request.form.get('id')
+            name = request.form.get('name')
             pwd = request.form.get('pwd')
-            if id == '':
+            if id == '' or name == '' or pwd == '':
                 return redirect('/leagues')
+
+            if correct(id=id, name=name, password=pwd):
+                join_league(id=id, name=name, password=pwd,
+                            user_id=get_id(username=username))
 
             # check if the id and pwd are correct and add that league to the
             # users leagues in SQL

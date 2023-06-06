@@ -61,8 +61,8 @@ def league_exists(name):
 
 def add_user(first, last, username, email, password):
     with engine.connect() as conn:
-        result = conn.execute(text("INSERT INTO users (firstName, lastName, username, email, pwd) VALUES ('" +
-                              first + "', '" + last + "', '" + username + "','" + email + "','" + password + "')"))
+        result = conn.execute(text("INSERT INTO users (firstName, lastName, username, email, pwd, leagues) VALUES ('" +
+                              first + "', '" + last + "', '" + username + "','" + email + "','" + password + "','[]')"))
 
 
 def get_leagues(username):
@@ -110,6 +110,59 @@ def create_league(id, name, password, players, start, weeks, cash, username):
         conn.execute(text("UPDATE users SET leagues = '" +
                      str(leagues) + "' WHERE id = " + str(username)))
 
+        create_leagure_string = "CREATE TABLE " + id + \
+            " (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, user_id INT, stock VARCHAR(100), amount INT, valid BOOLEAN)"
+        conn.execute(text(create_leagure_string))
+        add_first_user = "INSERT INTO " + id + \
+            "(user_id, stock, amount, valid) VALUES (" + \
+            str(username) + ",'CASH', " + str(cash) + ", TRUE)"
+        conn.execute(text(add_first_user))
 
-def join_league():
-    return 0
+
+def correct(id, name, password):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM leagues"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (id == row['league_id'] and name == row['name'] and password == row['password']):
+                return True
+
+    return False
+
+
+def join_league(id, name, password, user_id):
+    with engine.connect() as conn:
+        leagues = conn.execute(
+            text("SELECT * FROM leagues WHERE league_id = '" + id + "'"))
+        users = conn.execute(
+            text("SELECT * FROM users WHERE id = " + str(user_id)))
+        leagues_table = leagues.all()
+        users_table = users.all()
+        result_dict = [row._asdict() for row in leagues_table]
+        league_id = 0
+        cash = 0
+        users_array = []
+        for row in result_dict:
+            if (id == row['league_id']):
+                league_id = row['id']
+                cash = row['weekly_money']
+                users_array = json.loads(row['users'])
+        users_array.append(user_id)
+        conn.execute(text("UPDATE leagues SET users = '" +
+                     str(users_array) + "' WHERE id = " + str(league_id)))
+
+        leagues = []
+        result_dict = [row._asdict() for row in users_table]
+        for row in result_dict:
+            if (user_id == row['id']):
+                leagues = json.loads(row['leagues'])
+
+        leagues.append(league_id)
+        conn.execute(text("UPDATE users SET leagues = '" +
+                     str(leagues) + "' WHERE id = " + str(user_id)))
+
+        add_curr_user = "INSERT INTO " + id + \
+            "(user_id, stock, amount, valid) VALUES (" + \
+            str(user_id) + ",'CASH', " + str(cash) + ", TRUE)"
+        conn.execute(text(add_curr_user))
