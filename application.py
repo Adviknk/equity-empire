@@ -107,14 +107,18 @@ def create(username=''):
             name = request.form.get('name')
             pwd = request.form.get('pwd')
             players = request.form.get('players')
-            start = request.form.get('start')
+            start = request.form.get('date')
             weeks = request.form.get('weeks')
             cash = request.form.get('cash')
             if id == '' or name == '' or pwd == '' or players == '' or start == '' or weeks == '' or cash == '':
                 return redirect('/leagues')
 
+            # league id exists
             if league_exists(id):
                 return redirect('/leagues')
+
+            create_league(id=id, name=name, password=pwd, players=players, start=start,
+                          weeks=weeks, cash=cash, username=get_id(username=username))
 
             # add league to leagues
 
