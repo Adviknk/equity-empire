@@ -29,7 +29,6 @@ def explore(username=''):
 @app.route("/leagues/<username>")
 def leagues(username=''):
     if 'username' in session:
-        # currently using leagues array but will use SQL array connected to the username
         user_leagues = get_leagues(username=session['username'])
         return render_template('league-home.html', username=session['username'], all_leagues=user_leagues)
     else:
@@ -104,13 +103,20 @@ def create(username=''):
             return render_template('create.html', username=session['username'])
 
         if request.method == "POST":
+            id = request.form.get('id')
             name = request.form.get('name')
-            if name == '':
+            pwd = request.form.get('pwd')
+            players = request.form.get('players')
+            start = request.form.get('start')
+            weeks = request.form.get('weeks')
+            cash = request.form.get('cash')
+            if id == '' or name == '' or pwd == '' or players == '' or start == '' or weeks == '' or cash == '':
                 return redirect('/leagues')
 
-            # adding the league to the leagues
-            # replace with SQL data
-            user_leagues.append(name)
+            if league_exists(id):
+                return redirect('/leagues')
+
+            # add league to leagues
 
             return redirect('/leagues')
 

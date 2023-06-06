@@ -15,8 +15,32 @@
     <h1 class="my-4">Create League</h1>
     <form action="/create/{{username}}" method="POST">
         <div class="mb-3">
-          <label class="form-label">League Name</label>
-          <input name='name' class="form-control">
+          <label class="form-label">League ID</label>
+          <input name='id' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">League Name</label>
+            <input name='name' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">League Password</label>
+            <input name='pwd' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Number of Players</label>
+            <input name='players' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Start Date</label>
+            <input name='date' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Number of Weeks</label>
+            <input name='weeks' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Weekly Cash</label>
+            <input name='cash' class="form-control">
         </div>
         <a href="/leagues/{{username}}"  class="btn btn-primary">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>

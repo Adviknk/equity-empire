@@ -36,6 +36,18 @@ def exists(username):
     return False
 
 
+def league_exists(name):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM leagues"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (name == row['id']):
+                return True
+
+    return False
+
+
 def add_user(first, last, username, email, password):
     with engine.connect() as conn:
         result = conn.execute(text("INSERT INTO users (firstName, lastName, username, email, pwd) VALUES ('" +
