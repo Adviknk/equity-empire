@@ -4,8 +4,6 @@ from helper import *
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-user_leagues = []
-
 
 @app.route("/")
 @app.route("/home")
@@ -32,6 +30,7 @@ def explore(username=''):
 def leagues(username=''):
     if 'username' in session:
         # currently using leagues array but will use SQL array connected to the username
+        user_leagues = get_leagues(username=session['username'])
         return render_template('league-home.html', username=session['username'], all_leagues=user_leagues)
     else:
         return redirect('/login')
@@ -81,12 +80,14 @@ def sign_up():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if user_name == '':
+        if user_name == '' or first == '' or last == '' or email == '' or password == '':
             return render_template("signup-error.html", error='username is invalid')
 
+        add_user(first=first, last=last, username=user_name,
+                 email=email, password=password)
         session['username'] = user_name
 
-        return redirect('/account' + user_name)
+        return redirect('/account/' + user_name)
 
 
 @app.route("/logout")
@@ -144,6 +145,7 @@ def portfolio(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
         # check if league in username database
+        user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
             return render_template('portfolio.html', username=session['username'], name=league_name)
 
@@ -155,6 +157,7 @@ def stocks(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
         # check if league in username database
+        user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
             return render_template('stocks.html', username=session['username'], name=league_name)
 
@@ -166,6 +169,7 @@ def scoreboard(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
         # check if league in username database
+        user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
             return render_template('scoreboard.html', username=session['username'], name=league_name)
 
@@ -177,6 +181,7 @@ def standings(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
         # check if league in username database
+        user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
             return render_template('standings.html', username=session['username'], name=league_name)
 
@@ -188,6 +193,7 @@ def schedule(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
         # check if league in username database
+        user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
             return render_template('schedule.html', username=session['username'], name=league_name)
 
