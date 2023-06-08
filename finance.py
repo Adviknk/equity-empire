@@ -119,3 +119,65 @@ def get_amounts(league, user_id):
                 amount.append(current_amount)
 
     return amount
+
+
+def cashout(league, user_id, stock):
+    total = 0
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id) + " and stock = '" + stock + "'"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (int(row['valid']) == 1):
+                amount = int(row['amount'])
+                total = total + amount
+
+        if total == 0:
+            return False
+
+        result = conn.execute(
+            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id) + " and stock = 'CASH'"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            cash = round(float(row['amount']), 2)
+
+        ticker = yf.Ticker(stock)
+        stock_info = ticker.info
+        current_price = stock_info["currentPrice"]
+
+        cash = cash + current_price * total
+        new_cash = round(cash, 2)
+
+        update_string = "UPDATE " + str(league) + " SET amount = " + str(
+            new_cash) + " WHERE user_id = " + str(user_id) + " and stock = 'CASH'"
+        conn.execute(text(update_string))
+
+        update_string = "UPDATE " + \
+            str(league) + " SET valid = FALSE WHERE user_id = " + \
+            str(user_id) + " and stock = '" + stock + "'"
+        conn.execute(text(update_string))
+
+        return True
+
+
+def get_values(stocks, value):
+    values = []
+    for stock in stocks:
+        ticker = yf.Ticker(stock)
+        stock_info = ticker.info
+        current_price = stock_info[value]
+        values.append(current_price)
+
+    return values
+
+
+def get_values_array(stock, values):
+    return_values = []
+    ticker = yf.Ticker(stock)
+    stock_info = ticker.info
+    for value in values:
+        return_values.append(stock_info[value])
+
+    return return_values

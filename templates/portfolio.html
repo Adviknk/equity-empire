@@ -1,7 +1,58 @@
 {% extends "dashboard.html" %}
 
 {% block main %}
-<h1>
-    Portfolio: {{name}}
-</h1>
+<div class="container">
+    <h1>
+        Portfolio
+    </h1>
+    <h1>
+        Cash: ${{cash}}
+    </h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Stock</th>
+                <th scope="col">Shares</th>
+                <th scope="col">Bought At</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody id='stock-table'>
+            <script>
+                    let amounts = JSON.parse('{{ amounts | tojson | safe }}');
+                    let stocks = JSON.parse('{{ stocks | tojson | safe }}');
+                    let costs = JSON.parse('{{ costs | tojson | safe }}');
+                    let values = JSON.parse('{{ values | tojson | safe }}');
+                    for(let num = 0; num < "{{count}}"; num++) {
+                        var row = document.createElement("tr");
+                        
+                        // Create and append four table data (td) elements to the row
+                        for (var i = 0; i < 4; i++) {
+                            var cell = document.createElement("td");
+                            
+                            // Set the text content of each cell
+                            if (i === 0) {
+                                cell.textContent = stocks[num];
+                            } else if (i === 1) {
+                                cell.textContent = amounts[num];
+                            } else if (i === 2) {
+                                cell.textContent = costs[num];
+                            } else if (i === 3) {
+                                cell.textContent = values[num];
+                            }
+                            
+                            // Append the cell to the row
+                            row.appendChild(cell);
+                        }
+
+                        // Append the row to the table (assuming you have a table element with id "myTable")
+                        var table = document.querySelector("#stock-table")
+                        table.appendChild(row);
+                    }
+            </script>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary btn-lg btn-block mt-2" href="/leagues/{{username}}/{{name}}/portfolio/cashout">Cash Out</a>
+</div>
+
 {% endblock %}

@@ -1,10 +1,65 @@
 {% extends "dashboard.html" %}
 
 {% block main %}
-<h1>
-    Stocks: {{name}}
-</h1>
-<a class="btn btn-secondary btn-lg btn-block" href="/leagues/{{username}}/{{name}}/stocks/buy">
-    Buy A Stocks
-</a>
+<div class="container">
+    <h1>
+        Common Stocks
+    </h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Stock</th>
+                <th scope="col">Current Price</th>
+                <th scope="col">Previous Close</th>
+                <th scope="col">Open</th>
+                <th scope="col">Day Lows</th>
+                <th scope="col">Regular Market Day Highs</th>
+            </tr>
+        </thead>
+        <tbody id='stock-table'>
+            <script>
+                    let amounts = JSON.parse('{{ current_prices | tojson | safe }}');
+                    let stocks = JSON.parse('{{ stocks | tojson | safe }}');
+                    let costs = JSON.parse('{{ prev_close | tojson | safe }}');
+                    let values = JSON.parse('{{ opens | tojson | safe }}');
+                    let values2 = JSON.parse('{{ day_lows | tojson | safe }}');
+                    let values3 = JSON.parse('{{ regular_day_high | tojson | safe }}');
+                    for(let num = 0; num < 20; num++) {
+                        var row = document.createElement("tr");
+                        
+                        // Create and append four table data (td) elements to the row
+                        for (var i = 0; i < 6; i++) {
+                            var cell = document.createElement("td");
+                            
+                            // Set the text content of each cell
+                            if (i === 0) {
+                                cell.textContent = stocks[num];
+                            } else if (i === 1) {
+                                cell.textContent = amounts[num];
+                            } else if (i === 2) {
+                                cell.textContent = costs[num];
+                            } else if (i === 3) {
+                                cell.textContent = values[num];
+                            }
+                            else if (i === 4) {
+                                cell.textContent = values2[num];
+                            } else if (i === 5) {
+                                cell.textContent = values3[num];
+                            }
+                            
+                            // Append the cell to the row
+                            row.appendChild(cell);
+                        }
+
+                        // Append the row to the table (assuming you have a table element with id "myTable")
+                        var table = document.querySelector("#stock-table")
+                        table.appendChild(row);
+                    }
+            </script>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary btn-lg btn-block" href="/leagues/{{username}}/{{name}}/stocks/buy">
+        Buy A Stocks
+    </a>
+</div>
 {% endblock %}

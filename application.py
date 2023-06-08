@@ -171,12 +171,30 @@ def portfolio(username='', league_name=''):
             name=league_name), user_id=get_id(username))
         amounts = get_amounts(league=get_league_id(
             name=league_name), user_id=get_id(username))
-        print(cash)
-        print(stocks)
-        print(costs)
-        print(amounts)
+        values = get_values(stocks=stocks, value='currentPrice')
+        cash = round(cash, 2)
         if league_name in user_leagues:
-            return render_template('portfolio.html', username=session['username'], name=league_name, cash=cash, stocks=stocks, amounts=amounts, costs=costs)
+            return render_template('portfolio.html', username=session['username'], name=league_name, cash=cash, stocks=stocks, amounts=amounts, costs=costs, values=values, count=len(stocks))
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/portfolio/cashout", methods=["GET", "POST"])
+def cash_out(username='', league_name=''):
+    if 'username' in session:
+
+        if request.method == "GET":
+            user_leagues = get_leagues(username=session['username'])
+            if league_name in user_leagues:
+                return render_template('cash-out.html', username=session['username'], name=league_name)
+
+        if request.method == "POST":
+            stock = request.form.get('stock')
+
+            if (not cashout(league=get_league_id(name=league_name), user_id=get_id(username=username), stock=stock)):
+                return render_template('cash-out.html', username=session['username'], name=league_name, alert_message="Invalid")
+            else:
+                return redirect('/leagues/' + username + '/' + league_name + '/portfolio')
 
     return redirect('/login')
 
@@ -187,8 +205,26 @@ def stocks(username='', league_name=''):
     if 'username' in session:
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
+        stocks = ["AAPL", "MSFT", "AMZN", "GOOGL", "META", "TSLA", "JPM", "V", "JNJ",
+                  "NVDA", "PYPL", "UNH", "HD", "PG", "MA", "DIS", "BAC", "INTC", "XOM", "VZ"]
+        current_prices = []
+        prev_close = []
+        opens = []
+        day_lows = []
+        regular_day_high = []
+        all_array = [current_prices, prev_close,
+                     opens, day_lows, regular_day_high]
+        values = ['currentPrice', 'previousClose',
+                  'open', 'dayLow', 'regularMarketDayHigh']
+        for stock in stocks:
+            recieved = get_values_array(stock=stock, values=values)
+            i = 0
+            for array in all_array:
+                array.append(recieved[i])
+                i = i + 1
+
         if league_name in user_leagues:
-            return render_template('stocks.html', username=session['username'], name=league_name)
+            return render_template('stocks.html', username=session['username'], name=league_name, stocks=stocks, current_prices=current_prices, prev_close=prev_close, opens=opens, day_lows=day_lows, regular_day_high=regular_day_high)
 
     return redirect('/login')
 
