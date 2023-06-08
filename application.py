@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 from sqlHelper import *
+from finance import *
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -114,7 +115,7 @@ def create(username=''):
                 return redirect('/leagues')
 
             # league id exists
-            if league_exists(id):
+            if league_exists(name):
                 return redirect('/leagues')
 
             create_league(id=id, name=name, password=pwd, players=players, start=start,
@@ -159,6 +160,7 @@ def join(username=''):
 def portfolio(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
+
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
@@ -175,6 +177,33 @@ def stocks(username='', league_name=''):
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
             return render_template('stocks.html', username=session['username'], name=league_name)
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/stocks/buy", methods=["GET", "POST"])
+def buy_stocks(username='', league_name=''):
+    if 'username' in session:
+        if request.method == "GET":
+            user_leagues = get_leagues(username=session['username'])
+            if league_name in user_leagues:
+                return render_template('buy-stock.html', username=session['username'], name=league_name)
+
+        if request.method == "POST":
+            stock = request.form.get('stock')
+            number_shares = request.form.get('shares')
+
+            stock_exists = processOrder(stock=stock, num=number_shares)
+            if (stock_exists):
+                print(stock_exists)
+                buy_stock = buyStock(
+                    stock=stock, num=number_shares, league=get_league_id(name=league_name), id=get_id(username=username))
+                if (not buy_stock):
+                    return render_template('buy-stock.html', username=session['username'], name=league_name, alert_message="Not Enough Money")
+                else:
+                    return redirect('/leagues/' + username + '/' + league_name + '/portfolio')
+            else:
+                return render_template('buy-stock.html', username=session['username'], name=league_name, alert_message="Invalid Stock Symbol")
 
     return redirect('/login')
 

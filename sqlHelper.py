@@ -47,13 +47,25 @@ def get_id(username):
     return 0
 
 
+def get_league_id(name):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM leagues"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (name == row['name']):
+                return row['league_id']
+
+    return 0
+
+
 def league_exists(name):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM leagues"))
         table = result.all()
         result_dict = [row._asdict() for row in table]
         for row in result_dict:
-            if (name == row['league_id']):
+            if (name == row['name']):
                 return True
 
     return False

@@ -1,0 +1,27 @@
+{% extends "dashboard.html" %}
+
+{% block main %}
+<h1>
+    Buy A Stock: {{name}}
+</h1>
+<main class="container">
+    <h1 class="my-4">Join League</h1>
+    <form action="/leagues/{{username}}/{{name}}/stocks/buy" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Stock Symbol</label>
+          <input name='stock' class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Number of Shares</label>
+            <input name='shares' class="form-control">
+        </div>
+        <a href="/leagues/{{username}}/{{name}}/stocks"  class="btn btn-primary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if alert_message %}
+    <div class="alert alert-info" role="alert">
+      {{ alert_message }}
+    </div>
+    {% endif %}
+</main>
+{% endblock %}
