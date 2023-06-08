@@ -123,7 +123,7 @@ def create_league(id, name, password, players, start, weeks, cash, username):
                      str(leagues) + "' WHERE id = " + str(username)))
 
         create_leagure_string = "CREATE TABLE " + id + \
-            " (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, user_id INT, stock VARCHAR(100), amount INT, valid BOOLEAN)"
+            " (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, user_id INT, stock VARCHAR(100), amount INT, valid BOOLEAN, cost DOUBLE)"
         conn.execute(text(create_leagure_string))
         add_first_user = "INSERT INTO " + id + \
             "(user_id, stock, amount, valid) VALUES (" + \

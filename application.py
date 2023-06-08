@@ -163,8 +163,20 @@ def portfolio(username='', league_name=''):
 
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
+        cash = get_cash(league=get_league_id(
+            name=league_name), user_id=get_id(username))
+        stocks = get_stocks(league=get_league_id(
+            name=league_name), user_id=get_id(username))
+        costs = get_costs(league=get_league_id(
+            name=league_name), user_id=get_id(username))
+        amounts = get_amounts(league=get_league_id(
+            name=league_name), user_id=get_id(username))
+        print(cash)
+        print(stocks)
+        print(costs)
+        print(amounts)
         if league_name in user_leagues:
-            return render_template('portfolio.html', username=session['username'], name=league_name)
+            return render_template('portfolio.html', username=session['username'], name=league_name, cash=cash, stocks=stocks, amounts=amounts, costs=costs)
 
     return redirect('/login')
 

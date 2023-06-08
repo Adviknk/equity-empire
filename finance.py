@@ -23,7 +23,7 @@ def processOrder(stock, num):
 def buyStock(stock, num, league, id):
     with engine.connect() as conn:
         result = conn.execute(text(
-            "SELECT * FROM " + str(league) + " WHERE id = " + str(id) + " and stock = 'CASH'"))
+            "SELECT * FROM " + str(league) + " WHERE user_id = " + str(id) + " and stock = 'CASH'"))
         table = result.all()
         result_dict = [row._asdict() for row in table]
         for row in result_dict:
@@ -39,10 +39,83 @@ def buyStock(stock, num, league, id):
         new_cash = cash - cost
 
         update_string = "UPDATE " + str(league) + " SET amount = " + str(
-            new_cash) + " WHERE id = " + str(id) + " and stock = 'CASH'"
+            new_cash) + " WHERE user_id = " + str(id) + " and stock = 'CASH'"
         conn.execute(text(update_string))
         add_stock = "INSERT INTO " + \
-            str(league) + " (user_id, stock, amount, valid) VALUES (" + \
-            str(id) + ", '" + str(stock) + "', " + str(num) + ", TRUE)"
+            str(league) + " (user_id, stock, amount, valid, cost) VALUES (" + \
+            str(id) + ", '" + str(stock) + "', " + str(num) + \
+            ", TRUE, " + str(current_price) + ")"
         conn.execute(text(add_stock))
         return True
+
+
+def get_costs(league, user_id):
+    costs = []
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id)))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (not (row['stock'] == 'CASH')):
+                current_costs = float(row['cost'])
+                costs.append(current_costs)
+
+    return costs
+
+
+def get_costs(league, user_id):
+    costs = []
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id)))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (not (row['stock'] == 'CASH') and int(row['valid']) == 1):
+                current_costs = float(row['cost'])
+                costs.append(current_costs)
+
+    return costs
+
+
+def get_stocks(league, user_id):
+    stocks = []
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id)))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (not (row['stock'] == 'CASH') and int(row['valid']) == 1):
+                current_stock = row['stock']
+                stocks.append(current_stock)
+
+    return stocks
+
+
+def get_cash(league, user_id):
+    with engine.connect() as conn:
+        result = conn.execute(text(
+            "SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id) + " and stock = 'CASH'"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            cash = float(row['amount'])
+
+    return cash
+
+
+def get_amounts(league, user_id):
+    amount = []
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id)))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (not (row['stock'] == 'CASH') and int(row['valid']) == 1):
+                current_amount = int(row['amount'])
+                amount.append(current_amount)
+
+    return amount
