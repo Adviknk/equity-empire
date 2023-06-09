@@ -162,7 +162,6 @@ def join(username=''):
 def portfolio(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
-
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         cash = get_cash(league=get_league_id(
@@ -265,7 +264,15 @@ def scoreboard(username='', league_name=''):
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
-            return render_template('scoreboard.html', username=session['username'], name=league_name)
+            week = get_week(league_id=get_league_id(league_name))
+            matchups = get_schedule(get_league_id(league_name))[week - 1]
+            names = get_names(get_league_id(league_name))
+            cash = []
+            for name in names:
+                cash.append(round(get_cash(league=get_league_id(
+                    league_name), user_id=get_id(username=name)), 2))
+
+            return render_template('scoreboard.html', username=session['username'], name=league_name, week=week, matchups=matchups, names=names, cash=cash, len=len(matchups))
 
     return redirect('/login')
 
@@ -289,7 +296,11 @@ def schedule(username='', league_name=''):
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
-            return render_template('schedule.html', username=session['username'], name=league_name)
+            array_schedule = get_schedule(get_league_id(league_name))
+            weeks = len(array_schedule)
+            matchups = len(array_schedule[0])
+            names = get_names(get_league_id(league_name))
+            return render_template('schedule.html', username=session['username'], name=league_name, schedule=array_schedule, weeks=weeks, matchups=matchups, names=names)
 
     return redirect('/login')
 

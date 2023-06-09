@@ -1,7 +1,57 @@
 {% extends "dashboard.html" %}
 
 {% block main %}
-<h1>
-    Schedule: {{name}}
-</h1>
+<div class="container">
+    <h1 class="mt-4">Schedule</h1>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr id="firstRow">
+                    <th>Week</th>
+                    <script>
+                        for(var i = 0; i < "{{matchups}}"; i++) {
+                            var matchupHeader = document.createElement('th');
+                            matchupHeader.textContent = 'Matchup ' + (i+1);
+                            var firstRow = document.querySelector("#firstRow")
+                            firstRow.appendChild(matchupHeader)
+                        }
+                    </script>
+                </tr>
+            </thead>
+            <tbody id="schedule-body">
+                <script>
+                    var array = JSON.parse('{{ schedule | tojson | safe }}');
+                    var names = JSON.parse('{{ names | tojson | safe }}');
+                    for(var j = 0; j < "{{weeks}}"; j++) {
+                        var row = document.createElement('tr');
+                        var week = document.createElement('td');
+                        week.textContent = 'Week ' + (j+1);
+                        row.appendChild(week)
+                        current_week = array[j]
+                        for(var i = 0; i < "{{matchups}}"; i++) {
+                            current_matchup = current_week[i]
+                            var matchupHeader = document.createElement('td');
+                            matchupHeader.textContent = names[current_matchup[0] - 1] + ' vs ' + names[current_matchup[1] - 1];
+                            row.appendChild(matchupHeader)
+                        }
+                        var body = document.querySelector("#schedule-body");
+                        body.appendChild(row)
+                    }
+                    
+                </script>
+                <!-- <tr>
+                    <td>Week 1</td>
+                    <td>Team A vs Team B</td>
+                    <td>Team C vs Team D</td>
+                </tr>
+                <tr>
+                    <td>Week 2</td>
+                    <td>Team A vs Team C</td>
+                    <td>Team B vs Team D</td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

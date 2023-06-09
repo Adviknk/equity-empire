@@ -1,7 +1,63 @@
 {% extends "dashboard.html" %}
 
 {% block main %}
-<h1>
-    Scoreboard: {{name}}
-</h1>
+<div class="container">
+    <h1 class="mt-4">Scoreboard</h1>
+    <h1>Week: {{week}}</h1>
+    <div class="table-responsive mt-4" id="table-container">
+        <script>
+            let names = JSON.parse('{{ names | tojson | safe }}');
+            let matchups = JSON.parse('{{ matchups | tojson | safe }}');
+            let cash = JSON.parse('{{ cash | tojson | safe }}');
+            var index = 0
+            for(var count = 0; count < "{{len}}"; count++) {
+                console.log("here")
+                // Create the header
+                var header = document.createElement('h3');
+                header.textContent = 'Matchup ' + (count+1);
+
+                // Create the table element
+                var table = document.createElement('table');
+                table.classList.add('table', 'table-bordered');
+
+                var headerRow = document.createElement('tr');
+                var headerCell1 = document.createElement('th');
+                headerCell1.textContent = 'Team';
+                var headerCell2 = document.createElement('th');
+                headerCell2.textContent = 'Cash';
+                headerRow.appendChild(headerCell1);
+                headerRow.appendChild(headerCell2);
+
+                table.appendChild(headerRow)
+
+                // Create the table rows and cells
+                for (var i = 0; i < 2; i++) {
+                    var row = document.createElement('tr');
+                    
+
+                    var cell = document.createElement('td');
+                    cell.textContent = names[matchups[count][i] - 1];
+                    row.appendChild(cell);
+
+                    cell = document.createElement('td');
+                    cell.textContent = "$ " + cash[matchups[count][i] - 1];
+                    row.appendChild(cell);
+                    
+
+                    table.appendChild(row);
+
+                    index++;
+                }
+
+                // Append the header and table to the container div
+                var container = document.querySelector('#table-container');
+                container.appendChild(header);
+                container.appendChild(table);
+            }
+
+            
+        
+        </script>
+    </div>
+</div>
 {% endblock %}
