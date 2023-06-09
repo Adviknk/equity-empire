@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from sqlHelper import *
 from finance import *
+from timing import *
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -120,6 +121,7 @@ def create(username=''):
 
             create_league(id=id, name=name, password=pwd, players=players, start=start,
                           weeks=weeks, cash=cash, username=get_id(username=username))
+            add_schedule(id)
 
             # add league to leagues
 

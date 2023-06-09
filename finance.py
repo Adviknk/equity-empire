@@ -1,12 +1,6 @@
 import yfinance as yf
 from database import engine
 from sqlalchemy import text
-import json
-
-
-# Define a list of top stock symbols
-# top_symbols = ["AAPL", "MSFT", "AMZN", "GOOGL", "META", "TSLA", "JPM", "V", "JNJ", "NVDA",
-#                "PYPL", "UNH", "HD", "PG", "MA", "DIS", "BAC", "INTC", "XOM", "VZ"]
 
 
 def processOrder(stock, num):
