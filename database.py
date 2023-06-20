@@ -2,8 +2,8 @@ from sqlalchemy import create_engine
 import os
 
 
-db_password = os.getenv("DATABASE_PASSWORD")
-db_string = "mysql+pymysql://9qnyibjw2viylcgcxr43:" + db_password + \
+db_password = os.getenv("EQUITY_EMPIRE_DATABASE_PASSWORD")
+db_string = "mysql+pymysql://9qnyibjw2viylcgcxr43:" + str(db_password) + \
     "@aws.connect.psdb.cloud/stock-trading-game?charset=utf8mb4"
 
 

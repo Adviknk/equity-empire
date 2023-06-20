@@ -83,7 +83,7 @@ def get_name(user_id):
                 return row['username']
 
 
-def get_week():
+def get_week(league_id):
     return 1
 
 
