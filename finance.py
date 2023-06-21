@@ -43,19 +43,19 @@ def buyStock(stock, num, league, id):
         return True
 
 
-def get_costs(league, user_id):
-    costs = []
-    with engine.connect() as conn:
-        result = conn.execute(
-            text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id)))
-        table = result.all()
-        result_dict = [row._asdict() for row in table]
-        for row in result_dict:
-            if (not (row['stock'] == 'CASH')):
-                current_costs = float(row['cost'])
-                costs.append(current_costs)
+# def get_costs(league, user_id):
+#     costs = []
+#     with engine.connect() as conn:
+#         result = conn.execute(
+#             text("SELECT * FROM " + str(league) + " WHERE user_id = " + str(user_id)))
+#         table = result.all()
+#         result_dict = [row._asdict() for row in table]
+#         for row in result_dict:
+#             if (not (row['stock'] == 'CASH')):
+#                 current_costs = float(row['cost'])
+#                 costs.append(current_costs)
 
-    return costs
+#     return costs
 
 
 def get_costs(league, user_id):
