@@ -55,12 +55,12 @@ def log_in():
         return render_template("log-in.html")
 
     if request.method == "POST":
-        user_name = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
+        user_name = str(request.form.get('username'))
+        email = str(request.form.get('email'))
+        password = str(request.form.get('password'))
 
         if not authenticate(username=user_name, email=email, password=password):
-            return render_template("login-error.html", error='invalid input')
+            return render_template("login-error.html", error='Invalid Input')
 
         session['username'] = user_name
         return redirect('/account/' + user_name)
@@ -75,14 +75,14 @@ def sign_up():
         return render_template("sign-up.html")
 
     if request.method == "POST":
-        first = request.form.get('first')
-        last = request.form.get('last')
-        user_name = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
+        first = str(request.form.get('first'))
+        last = str(request.form.get('last'))
+        user_name = str(request.form.get('username'))
+        email = str(request.form.get('email'))
+        password = str(request.form.get('password'))
 
         if user_name == '' or first == '' or last == '' or email == '' or password == '':
-            return render_template("signup-error.html", error='username is invalid')
+            return render_template("signup-error.html", error='Invalid Input')
 
         add_user(first=first, last=last, username=user_name,
                  email=email, password=password)
@@ -105,23 +105,27 @@ def create(username=''):
             return render_template('create.html', username=session['username'])
 
         if request.method == "POST":
-            id = request.form.get('id')
-            name = request.form.get('name')
-            pwd = request.form.get('pwd')
+            id = str(request.form.get('id'))
+            name = str(request.form.get('name'))
+            pwd = str(request.form.get('pwd'))
             players = request.form.get('players')
-            start = request.form.get('date')
             weeks = request.form.get('weeks')
             cash = request.form.get('cash')
-            if id == '' or name == '' or pwd == '' or players == '' or start == '' or weeks == '' or cash == '':
-                return redirect('/leagues')
+            if id == '' or name == '' or pwd == '' or players == '' or weeks == '' or cash == '':
+                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+
+            if not isinstance(players, int) or not isinstance(weeks, int) or not isinstance(cash, int):
+                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+
+            if players % 2 != 0 or cash < 1 or weeks < 1:
+                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
             # league id exists
             if league_exists(name):
-                return redirect('/leagues')
+                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
-            create_league(id=id, name=name, password=pwd, players=players, start=start,
+            create_league(id=id, name=name, password=pwd, players=players, start="",
                           weeks=weeks, cash=cash, username=get_id(username=username))
-            add_schedule(id)
 
             # add league to leagues
 
@@ -138,15 +142,20 @@ def join(username=''):
             return render_template('join.html', username=session['username'])
 
         if request.method == "POST":
-            id = request.form.get('id')
-            name = request.form.get('name')
-            pwd = request.form.get('pwd')
+            id = str(request.form.get('id'))
+            name = str(request.form.get('name'))
+            pwd = str(request.form.get('pwd'))
             if id == '' or name == '' or pwd == '':
-                return redirect('/leagues')
+                return render_template('join.html', username=session['username'], alert_message="Invalid Input")
 
-            if correct(id=id, name=name, password=pwd):
+            # check if league is full
+
+            if correct(id=id, name=name, password=pwd) and not league_full(id=id):
                 join_league(id=id, name=name, password=pwd,
                             user_id=get_id(username=username))
+                # add schedule only when the last person has joined
+                if league_full(id=id):
+                    add_schedule(id)
 
             # check if the id and pwd are correct and add that league to the
             # users leagues in SQL
@@ -157,11 +166,16 @@ def join(username=''):
     else:
         return redirect('/login')
 
+# for all the method add an if statement that checks if the league is full
+
 
 @app.route("/leagues/<username>/<league_name>/portfolio")
 def portfolio(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         cash = get_cash(league=get_league_id(
@@ -183,6 +197,9 @@ def portfolio(username='', league_name=''):
 @app.route("/leagues/<username>/<league_name>/portfolio/cashout", methods=["GET", "POST"])
 def cash_out(username='', league_name=''):
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
 
         if request.method == "GET":
             user_leagues = get_leagues(username=session['username'])
@@ -204,6 +221,10 @@ def cash_out(username='', league_name=''):
 def stocks(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
+
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         stocks = ["AAPL", "MSFT", "AMZN", "GOOGL", "META", "TSLA", "JPM", "V", "JNJ",
@@ -233,6 +254,10 @@ def stocks(username='', league_name=''):
 @app.route("/leagues/<username>/<league_name>/stocks/buy", methods=["GET", "POST"])
 def buy_stocks(username='', league_name=''):
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
+
         if request.method == "GET":
             user_leagues = get_leagues(username=session['username'])
             if league_name in user_leagues:
@@ -261,6 +286,10 @@ def buy_stocks(username='', league_name=''):
 def scoreboard(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
+
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
@@ -281,10 +310,37 @@ def scoreboard(username='', league_name=''):
 def standings(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
+
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
-            return render_template('standings.html', username=session['username'], name=league_name)
+            players = create_dict(league_id=get_league_id(name=league_name))
+            players = sorted(
+                players, key=lambda x: x['win_percentage'], reverse=True)
+            return render_template('standings.html', username=session['username'], name=league_name, players=players)
+
+    return redirect('/login')
+
+
+@app.route("/leagues/<username>/<league_name>/new-week")
+def new_week(username='', league_name=''):
+    if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
+
+        # check if league in username database
+        user_leagues = get_leagues(username=session['username'])
+        if league_name in user_leagues:
+            # check the cash of each individual and find their matchup and see who won and who lost
+            # increase wins and losses
+            # reset all their cash to the weekly_cash of the league
+            # for all the valid stocks that arent CASH invalidate them all and make it FALSE
+            # change week to next week
+            return redirect('/leagues/' + username + '/' + league_name + '/standings')
 
     return redirect('/login')
 
@@ -293,6 +349,10 @@ def standings(username='', league_name=''):
 def schedule(username='', league_name=''):
     # also check if the username in session has a league with that name by checking database
     if 'username' in session:
+        if not league_full(id=get_league_id(name=league_name)):
+            user_leagues = get_leagues(username=session['username'])
+            return render_template('league-home.html', username=session['username'], all_leagues=user_leagues, alert_message="League Is Not Full")
+
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:

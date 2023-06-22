@@ -14,15 +14,22 @@
     <h1>Leagues: {{all_leagues}}</h1>
     <a class="btn btn-secondary btn-lg btn-block mt-2" href="/create/{{username}}">Create a League</a>
     <a class="btn btn-secondary btn-lg btn-block mt-2" href="/join/{{username}}">Join a League</a>
+    {% if alert_message %}
+    <div class="alert alert-info" role="alert">
+      {{ alert_message }}
+    </div>
+    {% endif %}
     <script>
         let loop_leagues = JSON.parse('{{ all_leagues | tojson | safe }}');
         for(let i = 0; i < loop_leagues.length; i++) {
             var anchor = document.createElement('a');
-            anchor.setAttribute('class', 'btn btn-secondary btn-lg btn-block mt-2');
+            anchor.setAttribute('class', 'btn btn-primary btn-lg btn-block mt-2');
             anchor.setAttribute('href', '/leagues/{{username}}/' + loop_leagues[i] + '/portfolio');
             anchor.innerText = loop_leagues[i];
+            let container = document.createElement('div');
+            container.append(anchor)
             let contain = document.querySelector("#leagues_page")
-            contain.appendChild(anchor);
+            contain.appendChild(container);
         }
     </script>
 </div>

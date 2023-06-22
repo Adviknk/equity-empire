@@ -99,6 +99,20 @@ def get_leagues(username):
     return names
 
 
+def league_full(id):
+    with engine.connect() as conn:
+        leagues = conn.execute(text("SELECT * FROM leagues"))
+        leagues_table = leagues.all()
+        result_dict = [row._asdict() for row in leagues_table]
+        for row in result_dict:
+            if (id == row['league_id']):
+                users_array = json.loads(row['users'])
+                if len(users_array) == int(row['num_players']):
+                    return True
+
+    return False
+
+
 def create_league(id, name, password, players, start, weeks, cash, username):
     with engine.connect() as conn:
         conn.execute(text("INSERT INTO leagues (name, league_id, password, num_players, start_date, weeks, weekly_money, users) VALUES ('" +
@@ -137,6 +151,9 @@ def create_league(id, name, password, players, start, weeks, cash, username):
             str(username) + ",'LOSSES', 0, FALSE)"
         conn.execute(text(add_wins))
         conn.execute(text(add_losses))
+        add_weeks = "INSERT INTO " + id + \
+            "(stock, amount, valid) VALUES ('WEEKS', 0, FALSE)"
+        conn.execute(text(add_weeks))
 
 
 def correct(id, name, password):

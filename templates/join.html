@@ -29,5 +29,10 @@
         <a href="/leagues/{{username}}"  class="btn btn-primary">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    {% if alert_message %}
+    <div class="alert alert-info" role="alert">
+      {{ alert_message }}
+    </div>
+    {% endif %}
 </main>
 {% endblock %}

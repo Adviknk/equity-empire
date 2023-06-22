@@ -3,11 +3,36 @@ import ast
 from database import engine
 from sqlalchemy import text
 from sqlHelper import *
-from apscheduler.schedulers.background import BackgroundScheduler
 
 
-scheduler = BackgroundScheduler(daemon=True)
-scheduler.start()
+def create_dict(league_id):
+    players = []
+    with engine.connect() as conn:
+        leagues = conn.execute(
+            text("SELECT * FROM " + str(league_id) + " WHERE stock = 'WINS'"))
+        leagues_table = leagues.all()
+        result_dict = [row._asdict() for row in leagues_table]
+        for row in result_dict:
+            players.append({"name": str(
+                get_name(user_id=row['user_id'])), "wins": int(row['amount'])})
+
+        i = 0
+        leagues = conn.execute(
+            text("SELECT * FROM " + str(league_id) + " WHERE stock = 'LOSSES'"))
+        leagues_table = leagues.all()
+        result_dict = [row._asdict() for row in leagues_table]
+        for row in result_dict:
+            players[i].update(
+                {"losses": int(row['amount'])})
+            total = players[i]["wins"] + \
+                players[i]["losses"]
+            if total == 0:
+                total = 1
+            players[i].update({"win_percentage": float(
+                players[i]["wins"] / total)})
+            i = i + 1
+
+    return players
 
 
 def generate_schedule(num_teams, num_weeks):

@@ -1,7 +1,33 @@
 {% extends "dashboard.html" %}
 
 {% block main %}
-<h1>
-    Standing: {{name}}
-</h1>
+<div class="container">
+    <h1>
+        Standing: {{name}}
+    </h1>
+    <a class="btn btn-primary btn-lg btn-block mt-2" href="/leagues/{{username}}/{{name}}/new-week">Start New Week</a>
+    <h1>Standings Table</h1>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Wins</th>
+          <th>Losses</th>
+          <th>Win Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for player in players %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ player.name }}</td>
+          <td>{{ player.wins }}</td>
+          <td>{{ player.losses }}</td>
+          <td>{{ player.win_percentage }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}
