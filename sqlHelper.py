@@ -129,6 +129,14 @@ def create_league(id, name, password, players, start, weeks, cash, username):
             "(user_id, stock, amount, valid) VALUES (" + \
             str(username) + ",'CASH', " + str(cash) + ", TRUE)"
         conn.execute(text(add_first_user))
+        add_wins = "INSERT INTO " + id + \
+            "(user_id, stock, amount, valid) VALUES (" + \
+            str(username) + ",'WINS', 0, FALSE)"
+        add_losses = "INSERT INTO " + id + \
+            "(user_id, stock, amount, valid) VALUES (" + \
+            str(username) + ",'LOSSES', 0, FALSE)"
+        conn.execute(text(add_wins))
+        conn.execute(text(add_losses))
 
 
 def correct(id, name, password):
@@ -178,3 +186,11 @@ def join_league(id, name, password, user_id):
             "(user_id, stock, amount, valid) VALUES (" + \
             str(user_id) + ",'CASH', " + str(cash) + ", TRUE)"
         conn.execute(text(add_curr_user))
+        add_wins = "INSERT INTO " + id + \
+            "(user_id, stock, amount, valid) VALUES (" + \
+            str(user_id) + ",'WINS', 0, FALSE)"
+        add_losses = "INSERT INTO " + id + \
+            "(user_id, stock, amount, valid) VALUES (" + \
+            str(user_id) + ",'LOSSES', 0, FALSE)"
+        conn.execute(text(add_wins))
+        conn.execute(text(add_losses))

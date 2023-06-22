@@ -85,18 +85,3 @@ def get_name(user_id):
 
 def get_week(league_id):
     return 1
-
-
-def change_week():
-    print(10)
-
-
-def schedule_task():
-    scheduler.add_job(change_week, 'date',
-                      seconds=10)  # Set the desired time
-
-    # Start the scheduler (if not already started)
-    if not scheduler.running:
-        scheduler.start()
-
-    print("Task 2 scheduled successfully!")
