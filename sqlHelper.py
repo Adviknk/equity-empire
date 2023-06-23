@@ -152,8 +152,12 @@ def create_league(id, name, password, players, start, weeks, cash, username):
         conn.execute(text(add_wins))
         conn.execute(text(add_losses))
         add_weeks = "INSERT INTO " + id + \
-            "(stock, amount, valid) VALUES ('WEEKS', 0, FALSE)"
+            "(stock, amount, valid) VALUES ('WEEK', 1, FALSE)"
         conn.execute(text(add_weeks))
+
+        add_week_check = "INSERT INTO " + id + \
+            "(stock, amount, valid) VALUES ('WEEK-CHECK', 0, FALSE)"
+        conn.execute(text(add_week_check))
 
 
 def correct(id, name, password):

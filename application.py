@@ -320,7 +320,11 @@ def standings(username='', league_name=''):
             players = create_dict(league_id=get_league_id(name=league_name))
             players = sorted(
                 players, key=lambda x: x['win_percentage'], reverse=True)
-            return render_template('standings.html', username=session['username'], name=league_name, players=players)
+            valid = check_weeks(league_id=get_league_id(name=league_name))
+            if (valid):
+                return render_template('standings.html', username=session['username'], name=league_name, players=players)
+            else:
+                return render_template('standings.html', username=session['username'], name=league_name, players=players, alert_message="No More Weeks, League is Over")
 
     return redirect('/login')
 
@@ -335,11 +339,27 @@ def new_week(username='', league_name=''):
         # check if league in username database
         user_leagues = get_leagues(username=session['username'])
         if league_name in user_leagues:
+            valid = check_weeks(league_id=get_league_id(name=league_name))
+            if valid:
+                week = get_week(league_id=get_league_id(name=league_name))
+                matchups = get_schedule(get_league_id(league_name))[week - 1]
+                print(matchups)
+                update_standing(league_id=get_league_id(
+                    name=league_name), matchups=matchups)
+                reset(league_id=get_league_id(name=league_name),
+                      cash=get_league_cash(league_id=get_league_id(name=league_name)))
+
+                add_week_check(league_id=get_league_id(name=league_name))
+                valid = check_weeks(league_id=get_league_id(name=league_name))
+                if valid:
+                    add_week(league_id=get_league_id(name=league_name))
+
             # check the cash of each individual and find their matchup and see who won and who lost
             # increase wins and losses
             # reset all their cash to the weekly_cash of the league
             # for all the valid stocks that arent CASH invalidate them all and make it FALSE
             # change week to next week
+
             return redirect('/leagues/' + username + '/' + league_name + '/standings')
 
     return redirect('/login')
