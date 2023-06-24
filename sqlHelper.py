@@ -1,6 +1,8 @@
+import json
+
+
 from database import engine
 from sqlalchemy import text
-import json
 
 
 def load_users():

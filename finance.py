@@ -1,4 +1,6 @@
 import yfinance as yf
+
+
 from database import engine
 from sqlalchemy import text
 

@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine
 import os
+
+from sqlalchemy import create_engine
 
 
 db_password = os.getenv("EQUITY_EMPIRE_DATABASE_PASSWORD")
