@@ -12,6 +12,10 @@
     font-weight: bold;
 }
 
+.left {
+    text-align: left; /* Aligns the header in the middle */
+}
+
 .custom-right-h3 {
     font-family: Arial, sans-serif; /* Changes the font */
     font-size: 35px; /* Changes the font size */
@@ -22,4 +26,9 @@
     text-align: center; 
     font-family: Arial, sans-serif;
     font-size: 20px; 
+}
+
+.big-btn {
+    width: 30%; /* Set the desired width, for example, 100% */
+
 }

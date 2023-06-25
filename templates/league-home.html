@@ -8,22 +8,26 @@
 
 {% block body %}
 
-<div id='leagues_page' class="container">
-    <h1>League Home</h1>
-    <h1>Username: {{username}}</h1>
-    <h1>Leagues: {{all_leagues}}</h1>
-    <a class="btn btn-secondary btn-lg btn-block mt-2" href="/create/{{username}}">Create a League</a>
-    <a class="btn btn-secondary btn-lg btn-block mt-2" href="/join/{{username}}">Join a League</a>
+<div class="container">
+    <h1 class="mt-4 custom-h1">League Home</h1>
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-primary btn-lg btn-block mt-2 big-btn" href="/create/{{username}}">Create a League</a>
+    </div>
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-primary btn-lg btn-block mt-2 big-btn" href="/join/{{username}}">Join a League</a>
+    </div>
     {% if alert_message %}
     <div class="alert alert-info" role="alert">
       {{ alert_message }}
     </div>
     {% endif %}
+    <h1 class="mt-4 custom-h3 left">Leagues</h1>
+    <div id='leagues_page' class=""></div>
     <script>
         let loop_leagues = JSON.parse('{{ all_leagues | tojson | safe }}');
         for(let i = 0; i < loop_leagues.length; i++) {
             var anchor = document.createElement('a');
-            anchor.setAttribute('class', 'btn btn-primary btn-lg btn-block mt-2');
+            anchor.setAttribute('class', 'btn btn-primary btn-lg btn-block mt-2 big-btn');
             anchor.setAttribute('href', '/leagues/{{username}}/' + loop_leagues[i] + '/portfolio');
             anchor.innerText = loop_leagues[i];
             let container = document.createElement('div');
