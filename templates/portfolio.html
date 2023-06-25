@@ -2,19 +2,19 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mt-4">
-        Portfolio
+    <h1 class="mt-4 custom-h1">
+        My Portfolio
     </h1>
-    <h1 class="mt-4">
-        Cash: ${{cash}}
+    <h1 class="mt-4 custom-h3">
+        Current Cash: ${{cash}}
     </h1>
-    <table class="table table-striped">
+    <table class="table table-striped mt-4">
         <thead>
             <tr>
-                <th scope="col">Stock</th>
+                <th scope="col">Symbol</th>
                 <th scope="col">Shares</th>
                 <th scope="col">Bought At</th>
-                <th scope="col">Value</th>
+                <th scope="col">Current Value</th>
             </tr>
         </thead>
         <tbody id='stock-table'>
@@ -52,7 +52,8 @@
             </script>
         </tbody>
     </table>
-    <a class="btn btn-secondary btn-lg btn-block mt-2" href="/leagues/{{username}}/{{name}}/portfolio/cashout">Cash Out</a>
+    <a class="btn btn-primary btn-lg btn-block mt-2" href="/leagues/{{username}}/{{name}}/stocks/buy">Buy A Stock</a>
+    <a class="btn btn-primary btn-lg btn-block mt-2" href="/leagues/{{username}}/{{name}}/portfolio/cashout">Cash Out</a>
 </div>
 
 {% endblock %}

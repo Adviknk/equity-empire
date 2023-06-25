@@ -2,13 +2,16 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mt-4">
+    <h1 class="mt-4 custom-h1">
         Common Stocks
     </h1>
-    <table class="table table-striped">
+    <a class="btn btn-primary btn-lg btn-block" href="/leagues/{{username}}/{{name}}/stocks/buy">
+        Buy A Stock
+    </a>
+    <table class="table table-striped mt-4">
         <thead>
             <tr>
-                <th scope="col">Stock</th>
+                <th scope="col">Symbol</th>
                 <th scope="col">Current Price</th>
                 <th scope="col">Previous Close</th>
                 <th scope="col">Open</th>
@@ -58,8 +61,5 @@
             </script>
         </tbody>
     </table>
-    <a class="btn btn-secondary btn-lg btn-block" href="/leagues/{{username}}/{{name}}/stocks/buy">
-        Buy A Stocks
-    </a>
 </div>
 {% endblock %}
