@@ -2,8 +2,8 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mt-4">Scoreboard</h1>
-    <h1>Week: {{week}}</h1>
+    <h1 class="mt-4 custom-h1">Scoreboard</h1>
+    <h3 class="mt-4 custom-h3">Week {{week}}</h3>
     <div class="table-responsive mt-4" id="table-container">
         <script>
             let names = JSON.parse('{{ names | tojson | safe }}');
@@ -11,19 +11,18 @@
             let cash = JSON.parse('{{ cash | tojson | safe }}');
             var index = 0
             for(var count = 0; count < "{{len}}"; count++) {
-                console.log("here")
-                // Create the header
-                var header = document.createElement('h3');
+                let header = document.createElement('h3');
                 header.textContent = 'Matchup ' + (count+1);
+                header.classList.add('custom-right-h3','mt-3')
 
                 // Create the table element
-                var table = document.createElement('table');
-                table.classList.add('table', 'table-bordered');
+                let table = document.createElement('table');
+                table.classList.add('table', 'table-bordered', 'mt-3');
 
-                var headerRow = document.createElement('tr');
-                var headerCell1 = document.createElement('th');
+                let headerRow = document.createElement('tr');
+                let headerCell1 = document.createElement('th');
                 headerCell1.textContent = 'Team';
-                var headerCell2 = document.createElement('th');
+                let headerCell2 = document.createElement('th');
                 headerCell2.textContent = 'Cash';
                 headerRow.appendChild(headerCell1);
                 headerRow.appendChild(headerCell2);
@@ -31,17 +30,17 @@
                 table.appendChild(headerRow)
 
                 // Create the table rows and cells
-                for (var i = 0; i < 2; i++) {
-                    var row = document.createElement('tr');
+                for (let i = 0; i < 2; i++) {
+                    let row = document.createElement('tr');
                     
 
-                    var cell = document.createElement('td');
+                    let cell = document.createElement('td');
                     cell.textContent = names[matchups[count][i] - 1];
                     row.appendChild(cell);
 
-                    cell = document.createElement('td');
-                    cell.textContent = "$ " + cash[matchups[count][i] - 1];
-                    row.appendChild(cell);
+                    let cell2 = document.createElement('td');
+                    cell2.textContent = "$ " + cash[matchups[count][i] - 1];
+                    row.appendChild(cell2);
                     
 
                     table.appendChild(row);
@@ -50,7 +49,7 @@
                 }
 
                 // Append the header and table to the container div
-                var container = document.querySelector('#table-container');
+                let container = document.querySelector('#table-container');
                 container.appendChild(header);
                 container.appendChild(table);
             }

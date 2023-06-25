@@ -2,17 +2,10 @@
 
 {% block main %}
 <div class="container">
-    <h1>
-        Standing: {{name}}
+    <h1 class="mt-4 custom-h1">
+        Standings
     </h1>
-    <a class="btn btn-primary btn-lg btn-block mt-2" href="/leagues/{{username}}/{{name}}/new-week">Start New Week</a>
-    {% if alert_message %}
-    <div class="alert alert-info" role="alert">
-      {{ alert_message }}
-    </div>
-    {% endif %}
-    <h1>Standings Table</h1>
-    <table class="table">
+    <table class="mt-4 table">
       <thead class="thead-dark">
         <tr>
           <th>Rank</th>
@@ -34,5 +27,11 @@
         {% endfor %}
       </tbody>
     </table>
+    <a class="btn btn-primary btn-block mt-4 right-btn float-right" href="/leagues/{{username}}/{{name}}/new-week">Start New Week</a>
+    {% if alert_message %}
+    <div class="alert alert-info" role="alert">
+      {{ alert_message }}
+    </div>
+    {% endif %}
   </div>
 {% endblock %}

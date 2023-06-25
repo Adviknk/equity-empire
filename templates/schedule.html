@@ -2,7 +2,7 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mt-4">Schedule</h1>
+    <h1 class="mt-4 custom-h1">Schedule</h1>
 
     <div class="table-responsive mt-4">
         <table class="table table-bordered">
@@ -26,7 +26,7 @@
                     for(var j = 0; j < "{{weeks}}"; j++) {
                         var row = document.createElement('tr');
                         var week = document.createElement('td');
-                        week.textContent = 'Week ' + (j+1);
+                        week.textContent = '' + (j+1);
                         row.appendChild(week)
                         current_week = array[j]
                         for(var i = 0; i < "{{matchups}}"; i++) {

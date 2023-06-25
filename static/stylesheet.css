@@ -1,0 +1,25 @@
+.custom-h1 {
+    text-align: center; /* Aligns the header in the middle */
+    font-family: Arial, sans-serif; /* Changes the font */
+    font-size: 50px; /* Changes the font size */
+    font-weight: bold;
+}
+
+.custom-h3 {
+    text-align: center; /* Aligns the header in the middle */
+    font-family: Arial, sans-serif; /* Changes the font */
+    font-size: 35px; /* Changes the font size */
+    font-weight: bold;
+}
+
+.custom-right-h3 {
+    font-family: Arial, sans-serif; /* Changes the font */
+    font-size: 35px; /* Changes the font size */
+    font-weight: bold;
+}
+
+.right-btn {
+    text-align: center; 
+    font-family: Arial, sans-serif;
+    font-size: 20px; 
+}
