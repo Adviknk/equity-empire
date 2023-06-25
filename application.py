@@ -21,28 +21,27 @@ def home(username=''):
 @app.route("/explore")
 @app.route("/explore/<username>")
 def explore(username=''):
+    stocks = ["AAPL", "MSFT", "AMZN", "GOOGL", "META", "TSLA", "JPM", "V", "JNJ",
+              "NVDA", "PYPL", "UNH", "HD", "PG", "MA", "DIS", "BAC", "INTC", "XOM", "VZ"]
+    current_prices = []
+    prev_close = []
+    opens = []
+    day_lows = []
+    regular_day_high = []
+    all_array = [current_prices, prev_close,
+                 opens, day_lows, regular_day_high]
+    values = ['currentPrice', 'previousClose',
+              'open', 'dayLow', 'regularMarketDayHigh']
+    for stock in stocks:
+        recieved = get_values_array(stock=stock, values=values)
+        i = 0
+        for array in all_array:
+            array.append(recieved[i])
+            i = i + 1
     if 'username' in session:
-        stocks = ["AAPL", "MSFT", "AMZN", "GOOGL", "META", "TSLA", "JPM", "V", "JNJ",
-                  "NVDA", "PYPL", "UNH", "HD", "PG", "MA", "DIS", "BAC", "INTC", "XOM", "VZ"]
-        current_prices = []
-        prev_close = []
-        opens = []
-        day_lows = []
-        regular_day_high = []
-        all_array = [current_prices, prev_close,
-                     opens, day_lows, regular_day_high]
-        values = ['currentPrice', 'previousClose',
-                  'open', 'dayLow', 'regularMarketDayHigh']
-        for stock in stocks:
-            recieved = get_values_array(stock=stock, values=values)
-            i = 0
-            for array in all_array:
-                array.append(recieved[i])
-                i = i + 1
-
         return render_template('explore.html', username=session['username'], stocks=stocks, current_prices=current_prices, prev_close=prev_close, opens=opens, day_lows=day_lows, regular_day_high=regular_day_high)
     else:
-        return render_template('explore.html', username='')
+        return render_template('explore.html', username='', stocks=stocks, current_prices=current_prices, prev_close=prev_close, opens=opens, day_lows=day_lows, regular_day_high=regular_day_high)
 
 
 @app.route("/leagues")

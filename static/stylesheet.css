@@ -34,6 +34,9 @@
 }
 
 .purple{
-    background-color:blueviolet
-    
+    background-color:blueviolet;
+    color: aliceblue
 }
+.purple:hover {
+    background-color: blueviolet;
+  }
