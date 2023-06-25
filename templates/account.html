@@ -8,8 +8,12 @@
 
 {% block body %}
 <div class="container">
-    <h1>Account Page</h1>
-    <h1>Username: {{username}}</h1>
-    <a class="btn btn-primary" href="/logout">Log Out</a>
+    <h1 class="custom-h1 mt-4">Account</h1>
+    <h3 class="'mt-4 custom-h3 left">Username: {{username}}</h3>
+    <h3 class="'mt-4 custom-h3 left">Email: {{username}}</h3>
+    <h3 class="'mt-4 custom-h3 left">First: {{username}}</h3>
+    <h3 class="'mt-4 custom-h3 left">Last: {{username}}</h3>
+    
+    <a class="btn btn-primary right-btn mt-4" href="/logout">Log Out</a>
 </div>
 {% endblock %}

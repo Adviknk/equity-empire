@@ -8,11 +8,9 @@
 
 {% block body %}
 <div class="container">
-    <h1>Create League</h1>
-    <h1>Username: {{username}}</h1>
+    <h1 class="mt-4 custom-h1">Create League</h1>
 </div>
 <main class="container">
-    <h1 class="my-4">Create League</h1>
     <form action="/create/{{username}}" method="POST">
         <div class="mb-3">
           <label class="form-label">League ID</label>
@@ -42,8 +40,8 @@
             <label class="form-label">Weekly Cash</label>
             <input name='cash' class="form-control">
         </div>
-        <a href="/leagues/{{username}}"  class="btn btn-primary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="/leagues/{{username}}"  class="btn btn-primary right-btn">Cancel</a>
+        <button type="submit" class="btn btn-primary right-btn">Submit</button>
     </form>
     {% if alert_message %}
     <div class="alert alert-info" role="alert">
