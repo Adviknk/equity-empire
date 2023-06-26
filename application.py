@@ -11,7 +11,7 @@ app.secret_key = 'your_secret_key'
 @app.route("/home")
 @app.route("/home/<username>")
 def home(username=''):
-    load_users()
+    # load_users()
     if 'username' in session:
         return render_template('home.html', username=session['username'])
     else:
