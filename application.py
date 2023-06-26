@@ -114,6 +114,7 @@ def logout():
     return redirect('/')
 
 
+@app.route("/create", methods=["GET", "POST"])
 @app.route("/create/<username>", methods=["GET", "POST"])
 def create(username=''):
     if 'username' in session:
@@ -152,6 +153,7 @@ def create(username=''):
         return redirect('/login')
 
 
+@app.route("/join", methods=["GET", "POST"])
 @app.route("/join/<username>", methods=["GET", "POST"])
 def join(username=''):
     if 'username' in session:
