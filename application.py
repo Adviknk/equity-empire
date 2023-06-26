@@ -58,7 +58,10 @@ def leagues(username=''):
 @app.route("/account/<username>")
 def account(username=''):
     if 'username' in session:
-        return render_template('account.html', username=session['username'])
+        first = get_info(username=username, info='firstName')
+        last = get_info(username=username, info='lastName')
+        email = get_info(username=username, info='email')
+        return render_template('account.html', username=session['username'], first=first, last=last, email=email)
     else:
         return redirect('/login')
 

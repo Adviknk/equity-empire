@@ -5,6 +5,18 @@ from database import engine
 from sqlalchemy import text
 
 
+def get_info(username, info):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM users"))
+        table = result.all()
+        result_dict = [row._asdict() for row in table]
+        for row in result_dict:
+            if (username == row['username']):
+                return row[info]
+
+    return 0
+
+
 def load_users():
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM users"))
