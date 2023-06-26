@@ -129,24 +129,28 @@ def create(username=''):
             id = str(request.form.get('id'))
             name = str(request.form.get('name'))
             pwd = str(request.form.get('pwd'))
-            players = int(request.form.get('players'))
-            weeks = int(request.form.get('weeks'))
-            cash = int(request.form.get('cash'))
+            try:
+                players = int(request.form.get('players'))
+                weeks = int(request.form.get('weeks'))
+                cash = int(request.form.get('cash'))
+            except Exception as e:
+                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+
             if id == '' or name == '' or pwd == '' or players == '' or weeks == '' or cash == '':
                 return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
             if not isinstance(players, int) or not isinstance(weeks, int) or not isinstance(cash, int):
                 return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
-            if players % 2 != 0 or cash < 1 or weeks < 1:
-                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+            if players % 2 != 0 or cash < 1 or weeks < 1 or players < 1:
+                return render_template('create.html', username=session['username'], alert_message="Must be Even Players, Cash > 1, and Weeks > 1")
 
             if ' ' in id:
-                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+                return render_template('create.html', username=session['username'], alert_message="No Spaces in ID")
 
             # league id exists
             if league_exists(name):
-                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+                return render_template('create.html', username=session['username'], alert_message="League Name Exists")
 
             create_league(id=id, name=name, password=pwd, players=players, start="",
                           weeks=weeks, cash=cash, username=get_id(username=username))
@@ -235,9 +239,9 @@ def cash_out(username='', league_name=''):
                 return render_template('cash-out.html', username=session['username'], name=league_name)
 
         if request.method == "POST":
-            stock = request.form.get('stock')
+            stock = str(request.form.get('stock'))
 
-            if (not cashout(league=get_league_id(name=league_name), user_id=get_id(username=username), stock=stock)):
+            if stock == '' or (not cashout(league=get_league_id(name=league_name), user_id=get_id(username=username), stock=stock)):
                 return render_template('cash-out.html', username=session['username'], name=league_name, alert_message="Invalid")
             else:
                 return redirect('/leagues/' + username + '/' + league_name + '/portfolio')
@@ -292,8 +296,14 @@ def buy_stocks(username='', league_name=''):
                 return render_template('buy-stock.html', username=session['username'], name=league_name)
 
         if request.method == "POST":
-            stock = request.form.get('stock')
-            number_shares = request.form.get('shares')
+            stock = str(request.form.get('stock'))
+            try:
+                number_shares = int(request.form.get('shares'))
+            except Exception as e:
+                return render_template('buy-stock.html', username=session['username'], name=league_name, alert_message="Invalid Input")
+
+            if stock == '' or number_shares == '' or not isinstance(number_shares, int):
+                return render_template('buy-stock.html', username=session['username'], name=league_name, alert_message="Invalid Input")
 
             stock_exists = processOrder(stock=stock, num=number_shares)
             if (stock_exists):
