@@ -129,9 +129,9 @@ def create(username=''):
             id = str(request.form.get('id'))
             name = str(request.form.get('name'))
             pwd = str(request.form.get('pwd'))
-            players = request.form.get('players')
-            weeks = request.form.get('weeks')
-            cash = request.form.get('cash')
+            players = int(request.form.get('players'))
+            weeks = int(request.form.get('weeks'))
+            cash = int(request.form.get('cash'))
             if id == '' or name == '' or pwd == '' or players == '' or weeks == '' or cash == '':
                 return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
@@ -139,6 +139,9 @@ def create(username=''):
                 return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
             if players % 2 != 0 or cash < 1 or weeks < 1:
+                return render_template('create.html', username=session['username'], alert_message="Invalid Input")
+
+            if ' ' in id:
                 return render_template('create.html', username=session['username'], alert_message="Invalid Input")
 
             # league id exists
@@ -178,12 +181,15 @@ def join(username=''):
                 # add schedule only when the last person has joined
                 if league_full(id=id):
                     add_schedule(id)
+                return redirect('/leagues')
+            else:
+                if league_full(id=id):
+                    return render_template('join.html', username=session['username'], alert_message="League Full")
+                return render_template('join.html', username=session['username'], alert_message="Invalid Input")
 
             # check if the id and pwd are correct and add that league to the
             # users leagues in SQL
             # each league will have an id and all information
-
-            return redirect('/leagues')
 
     else:
         return redirect('/login')
