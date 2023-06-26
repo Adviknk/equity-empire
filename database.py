@@ -14,7 +14,7 @@ engine = create_engine(
     db_string,
     connect_args={
         "ssl": {
-            "ca": os.getenv("CA_BUNDLE_CODE")
+            "ca": "certs/cert.pem"
         }
     }
 )
