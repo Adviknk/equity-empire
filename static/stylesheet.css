@@ -39,4 +39,14 @@
 }
 .purple:hover {
     background-color: blueviolet;
-  }
+}
+
+.carousel-item img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      filter: invert(100%);
+    }
