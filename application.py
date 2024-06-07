@@ -3,6 +3,8 @@ from sqlHelper import *
 from finance import *
 from timing import *
 
+import yfinance as yf
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -13,6 +15,7 @@ app.secret_key = 'your_secret_key'
 def home(username=''):
     # load_users()
     # change up the view of home page
+
     if 'username' in session:
         return render_template('home.html', username=session['username'])
     else:
